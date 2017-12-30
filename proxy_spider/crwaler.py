@@ -160,19 +160,4 @@ class Downloader(object):
 
 
 
-# pool = Pool()
-# downloader = Downloader()
-# class Abc:
-#     def abc(request):
-#         downloader.download(request)
-#
-# for i in range(1, 100):
-#     url = 'http://www.xicidaili.com/nn/{}'.format(i)
-#     request = Request(url)
-#     pool.spawn(Abc.abc, request)
-# while True:
-#     gevent.sleep(0.1)
-
-
-
 
