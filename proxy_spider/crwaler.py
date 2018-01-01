@@ -8,6 +8,7 @@ import settings
 import logging
 
 
+# 异步装饰器
 def spawn(pool=gevent):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -18,10 +19,10 @@ def spawn(pool=gevent):
 
 
 class Request(requests.Request):
-    def __init__(self, url, method='GET', callback=None, meta={}, **kwargs):
+    def __init__(self, url, method='GET', callback=None, meta=None, **kwargs):
         super(Request, self).__init__(method, url, **kwargs)
         self.callback = callback
-        self.meta = meta
+        self.meta = meta or {}
         self.retries = 0
         self._prepare()
 
@@ -46,6 +47,7 @@ class Crwaler(object):
     proxy_q = Queue(maxsize=100)
     __crwalers = {}
 
+    # 每个爬虫创建一个单例对象
     def __new__(cls, *args, **kwargs):
         spider = args[0]
         if Crwaler.__crwalers.get(spider.name, None) is None:
@@ -109,7 +111,6 @@ class Crwaler(object):
                     self.process_item(rsp)
 
     def process_item(self, item):
-        # print(item)
         self.item_q.put(item)
 
     def get_proxies(self, proxy=None):
@@ -159,19 +160,6 @@ class Downloader(object):
             return None
 
 
-
-# pool = Pool()
-# downloader = Downloader()
-# class Abc:
-#     def abc(request):
-#         downloader.download(request)
-#
-# for i in range(1, 100):
-#     url = 'http://www.xicidaili.com/nn/{}'.format(i)
-#     request = Request(url)
-#     pool.spawn(Abc.abc, request)
-# while True:
-#     gevent.sleep(0.1)
 
 
 

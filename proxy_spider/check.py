@@ -13,14 +13,14 @@ def check_proxy(proxy, name=None):
         'http': proxy,
         'https': proxy
     }
-    # try:
-    #     # 超过20秒的代理就不要了
-    #     # print(name, proxy, time.time())
-    #     r = requests.get('http://www.baidu.com', proxies=proxies, timeout=20, verify=False)
-    #     if r.status_code != 200:
-    #         return False
-    # except Exception as e:
-    #     return False
+    try:
+        # 超过20秒的代理就不要了
+        # print(name, proxy, time.time())
+        r = requests.get('http://www.baidu.com', proxies=proxies, timeout=20, verify=False)
+        if r.status_code == 200:
+            return True
+    except Exception as e:
+        pass
     try:
         # 超过20秒的代理就不要了
         r = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=5, verify=False)
