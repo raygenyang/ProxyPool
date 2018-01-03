@@ -4,7 +4,7 @@ import gevent
 import proxy_spider.spider
 from proxy_spider.check import check_proxy
 from proxy_spider.crwaler import Crwaler, spawn
-from db.queue import RedisQueue
+from db import RedisQueue
 
 
 # 获取所有可用爬虫类
