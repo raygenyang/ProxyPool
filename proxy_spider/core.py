@@ -21,6 +21,7 @@ def run(spider):
     crwaler = Crwaler(spider)
     crwaler.crwal()
 
+
 # 处理爬取数据
 def process_item():
     # 爬取结果队列
@@ -30,14 +31,16 @@ def process_item():
 
     rq = RedisQueue('ProxyPool')
     # 检查代理有效性
+
     @spawn(Crwaler.pool)
     def check(proxy, name):
+        print(name, proxy)
         if check_proxy(proxy, name):
             # 加入到爬虫代理队列
             if not pq.full():
                 pq.put(proxy)
             # 存入数据库
-            # rq.put((proxy, 0))
+            rq.put((proxy, 0))
 
     while True:
         if q.qsize() > 0:
