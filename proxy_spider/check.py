@@ -15,8 +15,6 @@ def check_proxy(proxy, name=None):
         'https': proxy
     }
     try:
-        # 超过20秒的代理就不要了
-        # print(name, proxy, time.time())
         r = requests.get('http://www.baidu.com', proxies=proxies, timeout=20, verify=False)
         if r.status_code == 200:
             ip_count += 1
@@ -25,8 +23,6 @@ def check_proxy(proxy, name=None):
     except Exception as e:
         gevent.sleep(1)
     try:
-        # 超过20秒的代理就不要了
-        # print(name, proxy, time.time())
         r = requests.get('http://www.qq.com', proxies=proxies, timeout=20, verify=False)
         if r.status_code == 200:
             ip_count += 1
@@ -35,8 +31,6 @@ def check_proxy(proxy, name=None):
     except Exception as e:
         gevent.sleep(1)
     try:
-        # 超过20秒的代理就不要了
-        # print(name, proxy, time.time())
         r = requests.get('http://www.taobao.com', proxies=proxies, timeout=20, verify=False)
         if r.status_code == 200:
             ip_count += 1
@@ -45,7 +39,6 @@ def check_proxy(proxy, name=None):
     except Exception as e:
         gevent.sleep(1)
     try:
-        # 超过20秒的代理就不要了
         r = requests.get('http://httpbin.org/ip', proxies=proxies, timeout=20, verify=False)
         if r.status_code == 200:
             ip_count += 1
