@@ -36,8 +36,6 @@ class XiciSpider(ProxySpider):
     def parse(self, response):
         tree = etree.HTML(response.text)
         selectors = tree.xpath('//*[@id="ip_list"]//tr[@class="odd"]')
-        if not selectors:
-            print(response.text)
         for selector in selectors:
             ip = selector.xpath('./td[2]/text()').pop()
             port = selector.xpath('./td[3]/text()').pop()
@@ -59,8 +57,6 @@ class KuaidailiSpider(ProxySpider):
     def parse(self, response):
         tree = etree.HTML(response.text)
         selectors = tree.xpath('//*[@id="list"]/table/tbody/tr')
-        if not selectors:
-            print(response.text)
         for selector in selectors:
             ip = selector.xpath('./td[@data-title="IP"]/text()').pop()
             port = selector.xpath('./td[@data-title="PORT"]/text()').pop()
@@ -83,8 +79,6 @@ class Ip66Spider(ProxySpider):
         html = response.content.decode('gbk')
         tree = etree.HTML(html)
         selectors = tree.xpath('//*[@id="main"]/div/div[1]/table/tr[position()>1]')
-        if not selectors:
-            print(response.text)
         for selector in selectors:
             ip = selector.xpath('./td[1]/text()').pop()
             port = selector.xpath('./td[2]/text()').pop()
@@ -110,8 +104,6 @@ class NianshaoSpider(ProxySpider):
         html = response.content.decode('gbk')
         tree = etree.HTML(html)
         selectors = tree.xpath('//*[@id="main"]/div/div/table/tbody/tr')
-        if not selectors:
-            print(html)
         for selector in selectors:
             ip = selector.xpath('./td[1]/text()').pop()
             port = selector.xpath('./td[2]/text()').pop()
