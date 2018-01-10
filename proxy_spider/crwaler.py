@@ -6,6 +6,7 @@ from gevent.queue import Queue, PriorityQueue
 import requests
 import settings
 import logging
+from requests.adapters import HTTPAdapter
 
 
 # 异步装饰器
@@ -46,6 +47,7 @@ class Crwaler(object):
     item_q = Queue(maxsize=10000)
     proxy_q = Queue(maxsize=100)
     __crwalers = {}
+    count = 0
 
     # 每个爬虫创建一个单例对象
     def __new__(cls, *args, **kwargs):
@@ -86,6 +88,8 @@ class Crwaler(object):
             gevent.sleep(0.001)
 
     def put_request(self, request):
+        Crwaler.count += 1
+        print(Crwaler.count, self.pool.free_count())
         priority = getattr(request, 'priority', 0)
         self.request_q.put((-priority, request))
 
@@ -127,7 +131,7 @@ class Crwaler(object):
 
     @staticmethod
     def item_to_proxy(item):
-        proxy = '{}://{}:{}'.format(item['protocol'].lower(), item['ip'], item['port'])
+        proxy = 'http://{}:{}'.format(item['ip'], item['port'])
         return proxy
 
 
@@ -135,6 +139,8 @@ class Downloader(object):
     def __init__(self, crwaler=None):
         self.crwaler = crwaler
         self.session = requests.Session()
+        self.session.mount('https://', HTTPAdapter(pool_connections=1000, pool_maxsize=1000))
+        self.session.mount('http://', HTTPAdapter(pool_connections=1000, pool_maxsize=1000))
         self.max_retries = getattr(settings, 'MAX_RETRIES', 0)
         self.timeout = getattr(settings, 'DOWNLOAD_TIMEOUT', 15)
         self.allow_redirects = getattr(settings, 'ALLOW_REDIRECTS', True)
@@ -152,7 +158,8 @@ class Downloader(object):
                 logging.debug('{}[{}] Successed.'.format(request.url, response.status_code))
                 return response
         except Exception as e:
-            logging.exception(request.url)
+            # logging.exception(request.url)
+            pass
         if request.retries < max_retries:
             request.retries += 1
             return request

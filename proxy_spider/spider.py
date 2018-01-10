@@ -17,7 +17,6 @@ class ProxySpider(object):
             self.start_urls = []
 
     def start_request(self):
-        rst = []
         for url in self.start_urls:
             yield Request(url, callback=self.parse)
 
@@ -28,12 +27,10 @@ class ProxySpider(object):
 class XiciSpider(ProxySpider):
     name = 'xici'
     enable = True
-    download_delay = 1
 
     def start_request(self):
         for i in range(1, 1000):
             next_url = 'http://www.xicidaili.com/nn/{}'.format(str(i))
-            # print(next_url, time.time())
             yield Request(next_url, callback=self.parse)
 
     def parse(self, response):
@@ -114,7 +111,7 @@ class NianshaoSpider(ProxySpider):
         tree = etree.HTML(html)
         selectors = tree.xpath('//*[@id="main"]/div/div/table/tbody/tr')
         if not selectors:
-            print(response.text)
+            print(html)
         for selector in selectors:
             ip = selector.xpath('./td[1]/text()').pop()
             port = selector.xpath('./td[2]/text()').pop()

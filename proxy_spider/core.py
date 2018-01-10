@@ -28,19 +28,20 @@ def process_item():
     q = Crwaler.item_q
     # 爬虫代理队列
     pq = Crwaler.proxy_q
-
+    # 有效代理队列
     rq = RedisQueue('ProxyPool')
-    # 检查代理有效性
 
+    # 检查代理有效性
     @spawn(Crwaler.pool)
     def check(proxy, name):
-        print(name, proxy)
-        if check_proxy(proxy, name):
+        # print(name, proxy)
+        priority = check_proxy(proxy, name)
+        if priority > 0:
             # 加入到爬虫代理队列
             if not pq.full():
                 pq.put(proxy)
             # 存入数据库
-            rq.put((proxy, 0))
+            rq.put((proxy, priority))
 
     while True:
         if q.qsize() > 0:
@@ -48,6 +49,7 @@ def process_item():
             proxy = Crwaler.item_to_proxy(item)
             name = item.get('name', None)
             check(proxy, name)
+        # 轮询间隔1ms
         gevent.sleep(0.001)
 
 
